@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <render/sprite-batch.h>
 
 void error_callback(int error, const char *description)
 {
@@ -96,7 +97,6 @@ int main(int argc, char **argv)
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glEnable(GL_BLEND);
-//    glEnable(GL_DEPTH_TEST);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -109,44 +109,26 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    float vertices[] = {
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-    };
-
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) nullptr);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
-
-    glm::mat4 projection = glm::ortho((float)_AZOR_DEFAULT_WINDOW_WIDTH_ / -2, (float)_AZOR_DEFAULT_WINDOW_WIDTH_ / 2, (float)_AZOR_DEFAULT_WINDOW_WIDTH_ / -2, (float)_AZOR_DEFAULT_WINDOW_HEIGHT_ / 2);
+    glm::mat4 projection = glm::ortho(
+        (float)_AZOR_DEFAULT_WINDOW_WIDTH_ / -2,
+        (float)_AZOR_DEFAULT_WINDOW_WIDTH_ / 2,
+        (float)_AZOR_DEFAULT_WINDOW_WIDTH_ / -2,
+        (float)_AZOR_DEFAULT_WINDOW_HEIGHT_ / 2,
+        -10.0f,
+        10.0f);
     glm::mat4 view = glm::mat4(1.0);
-//    view = glm::translate(view, glm::vec3(0, 0, 3.0f));
 
     default_shader->use();
     default_shader->set_matrix("projection", glm::value_ptr(projection));
     default_shader->set_matrix("view", glm::value_ptr(view));
+
+    SpriteBatch sprite_batch;
+    Sprite sprite("fbs", glm::vec2(640, 400));
+    Sprite sprite1("fbs", glm::vec2(100, 0));
+    Sprite sprite2("fbs", glm::vec2(-200, 0));
+    Sprite sprite3("fbs", glm::vec2(0, 100));
+    Sprite sprite4("fbs", glm::vec2(0, -200));
+    Sprite sprite5("fbs", glm::vec2(-640, -400));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -155,18 +137,16 @@ int main(int argc, char **argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-//        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        model = glm::translate(model, glm::vec3(0, 0, 0));
-//        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(1087, 1097, 0));
+        sprite_batch.begin();
 
-        res::get_texture("fbs")->bind();
-        default_shader->use();
-        default_shader->set_matrix("model", glm::value_ptr(model));
+        sprite_batch.draw(sprite);
+        sprite_batch.draw(sprite1);
+        sprite_batch.draw(sprite2);
+        sprite_batch.draw(sprite3);
+        sprite_batch.draw(sprite4);
+        sprite_batch.draw(sprite5);
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        sprite_batch.end();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
