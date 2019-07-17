@@ -66,3 +66,18 @@ execute:
         }
     }
 }
+
+void SpriteBatch::draw(tmx::Map *map)
+{
+    for (const auto& tile_set: map->sets)
+    {
+        for (uint32_t id: textures)
+        {
+            if (id == tile_set.texture->id)
+                goto next;
+        }
+        textures.push_back(tile_set.texture->id);
+        next: continue;
+    }
+}
+

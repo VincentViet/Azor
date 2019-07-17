@@ -17,9 +17,10 @@ class Sprite
  private:
     Texture* texture_;
     glm::vec4 data_[6]{};
-    glm::vec2 position_;
+    glm::vec2 position_{};
 
  public:
+    Sprite(Texture* texture, const glm::vec2& position);
     Sprite(const char* texture_name, const glm::vec2& position);
     void set_position(const glm::vec2& v);
 };

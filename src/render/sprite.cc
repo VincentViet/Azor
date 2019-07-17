@@ -40,6 +40,11 @@ void computed_data(Sprite* sprite){
     int a = 10;
 }
 
+Sprite::Sprite(Texture* texture, const glm::vec2&  position)
+{
+    this->texture_ = texture;
+    this->position_ = position;
+}
 Sprite::Sprite(const char *texture_name, const glm::vec2 &position)
     : position_(position)
 {

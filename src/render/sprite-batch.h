@@ -8,6 +8,7 @@
 #include "sprite.h"
 #include <map>
 #include <vector>
+#include <tmxparser/map.h>
 
 class SpriteBatch
 {
@@ -23,6 +24,7 @@ class SpriteBatch
     void end();
 
     void draw(const Sprite& sprite);
+    void draw(tmx::Map* map);
 };
 
 #endif //AZOR_SPRITE_BATCH_H_

@@ -10,6 +10,9 @@
 #define _AZOR_DEFAULT_WINDOW_TITLE_                     "AZOR"
 
 #define _AZOR_DEFAULT_VERTEX_SHADER_                    "../shaders/default.vert"
-#define _AZOR_DEFAULT_FRAGMENT_SHADER_                    "../shaders/default.frag"
+#define _AZOR_DEFAULT_FRAGMENT_SHADER_                  "../shaders/default.frag"
+
+#define _AZOR_TMX_MAP_ROOT_DIR_                         "../res/map/"
+#define _AZOR_TMX_TILE_SET_ROOT_DIR_                    "../res/tileset/"
 
 #endif //_AZOR_CONF_H_
