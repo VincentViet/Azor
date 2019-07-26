@@ -6512,7 +6512,7 @@ namespace Catch {
 
 // start catch_clara.h
 
-// Use Catch's value for console width (store Clara's off to the side, if present)
+// Use Catch's value for console m_width (store Clara's off to the side, if present)
 #ifdef CLARA_CONFIG_CONSOLE_WIDTH
 #define CATCH_TEMP_CLARA_CONFIG_CONSOLE_WIDTH CATCH_CLARA_TEXTFLOW_CONFIG_CONSOLE_WIDTH
 #undef CATCH_CLARA_TEXTFLOW_CONFIG_CONSOLE_WIDTH
@@ -6632,7 +6632,7 @@ public:
 			assert(m_stringIndex < m_column.m_strings.size());
 
 			m_suffix = false;
-			auto width = m_column.m_width - indent();
+			auto m_width = m_column.m_width - indent();
 			m_end = m_pos;
 			if (line()[m_pos] == '\n') {
 				++m_end;
@@ -6640,10 +6640,10 @@ public:
 			while (m_end < line().size() && line()[m_end] != '\n')
 				++m_end;
 
-			if (m_end < m_pos + width) {
+			if (m_end < m_pos + m_width) {
 				m_len = m_end - m_pos;
 			} else {
-				size_t len = width;
+				size_t len = m_width;
 				while (len > 0 && !isBoundary(m_pos + len))
 					--len;
 				while (len > 0 && isWhitespace(line()[m_pos + len - 1]))
@@ -6653,7 +6653,7 @@ public:
 					m_len = len;
 				} else {
 					m_suffix = true;
-					m_len = width - 1;
+					m_len = m_width - 1;
 				}
 			}
 		}
@@ -6724,7 +6724,7 @@ public:
 
 	explicit Column(std::string const& text) { m_strings.push_back(text); }
 
-	auto width(size_t newWidth) -> Column& {
+	auto m_width(size_t newWidth) -> Column& {
 		assert(newWidth > 0);
 		m_width = newWidth;
 		return *this;
@@ -6738,7 +6738,7 @@ public:
 		return *this;
 	}
 
-	auto width() const -> size_t { return m_width; }
+	auto m_width() const -> size_t { return m_width; }
 	auto begin() const -> iterator { return iterator(*this); }
 	auto end() const -> iterator { return { *this, m_strings.size() }; }
 
@@ -6767,7 +6767,7 @@ class Spacer : public Column {
 
 public:
 	explicit Spacer(size_t spaceWidth) : Column("") {
-		width(spaceWidth);
+		m_width(spaceWidth);
 	}
 };
 
@@ -6819,16 +6819,16 @@ public:
 			std::string row, padding;
 
 			for (size_t i = 0; i < m_columns.size(); ++i) {
-				auto width = m_columns[i].width();
+				auto m_width = m_columns[i].m_width();
 				if (m_iterators[i] != m_columns[i].end()) {
 					std::string col = *m_iterators[i];
 					row += padding + col;
-					if (col.size() < width)
-						padding = std::string(width - col.size(), ' ');
+					if (col.size() < m_width)
+						padding = std::string(m_width - col.size(), ' ');
 					else
 						padding = "";
 				} else {
-					padding += std::string(width, ' ');
+					padding += std::string(m_width, ' ');
 				}
 			}
 			return row;
@@ -7673,9 +7673,9 @@ namespace detail {
 
             for( auto const &cols : rows ) {
                 auto row =
-                        TextFlow::Column( cols.left ).width( optWidth ).indent( 2 ) +
+                        TextFlow::Column( cols.left ).m_width( optWidth ).indent( 2 ) +
                         TextFlow::Spacer(4) +
-                        TextFlow::Column( cols.right ).width( consoleWidth - 7 - optWidth );
+                        TextFlow::Column( cols.right ).m_width( consoleWidth - 7 - optWidth );
                 os << row << std::endl;
             }
         }
@@ -7786,7 +7786,7 @@ using detail::ParserResult;
 #pragma clang diagnostic pop
 #endif
 
-// Restore Clara's value for console width, if present
+// Restore Clara's value for console m_width, if present
 #ifdef CATCH_TEMP_CLARA_CONFIG_CONSOLE_WIDTH
 #define CATCH_CLARA_TEXTFLOW_CONFIG_CONSOLE_WIDTH CATCH_TEMP_CLARA_CONFIG_CONSOLE_WIDTH
 #undef CATCH_TEMP_CLARA_CONFIG_CONSOLE_WIDTH
@@ -8486,7 +8486,7 @@ namespace Catch {
         // be strace, for example) in /proc/$PID/status, so just get it from
         // there instead.
         bool isDebuggerActive(){
-            // Libstdc++ has a bug, where std::ifstream sets errno to 0
+            // Libstdc++ has a bug, where std::ifstream m_tile_sets errno to 0
             // This way our users can properly assert over errno values
             ErrnoGuard guard;
             std::ifstream in("/proc/self/status");
@@ -9214,7 +9214,7 @@ namespace Catch {
             auto wrapper = Column( tagCount.second.all() )
                                                     .initialIndent( 0 )
                                                     .indent( str.size() )
-                                                    .width( CATCH_CONFIG_CONSOLE_WIDTH-10 );
+                                                    .m_width( CATCH_CONFIG_CONSOLE_WIDTH-10 );
             Catch::cout() << str << wrapper << '\n';
         }
         Catch::cout() << pluralise( tagCounts.size(), "tag" ) << '\n' << std::endl;
@@ -9232,11 +9232,11 @@ namespace Catch {
             Catch::cout()
                     << Column( factoryKvp.first + ":" )
                             .indent(2)
-                            .width( 5+maxNameLen )
+                            .m_width( 5+maxNameLen )
                     +  Column( factoryKvp.second->getDescription() )
                             .initialIndent(0)
                             .indent(2)
-                            .width( CATCH_CONFIG_CONSOLE_WIDTH - maxNameLen-8 )
+                            .m_width( CATCH_CONFIG_CONSOLE_WIDTH - maxNameLen-8 )
                     << "\n";
         }
         Catch::cout() << std::endl;
@@ -13539,7 +13539,7 @@ std::size_t& findMax(std::size_t& i, std::size_t& j, std::size_t& k) {
 struct ColumnInfo {
     enum Justification { Left, Right };
     std::string name;
-    int width;
+    int m_width;
     Justification justification;
 };
 struct ColumnBreak {};
@@ -13671,8 +13671,8 @@ public:
         tp.m_currentColumn++;
 
         auto colInfo = tp.m_columnInfos[tp.m_currentColumn];
-        auto padding = (strSize + 2 < static_cast<std::size_t>(colInfo.width))
-            ? std::string(colInfo.width - (strSize + 2), ' ')
+        auto padding = (strSize + 2 < static_cast<std::size_t>(colInfo.m_width))
+            ? std::string(colInfo.m_width - (strSize + 2), ' ')
             : std::string();
         if (colInfo.justification == ColumnInfo::Left)
             tp.m_os << colStr << padding << " ";
@@ -13755,7 +13755,7 @@ void ConsoleReporter::sectionEnded(SectionStats const& _sectionStats) {
 void ConsoleReporter::benchmarkStarting(BenchmarkInfo const& info) {
     lazyPrintWithoutClosingBenchmarkTable();
 
-    auto nameCol = Column( info.name ).width( static_cast<std::size_t>( m_tablePrinter->columnInfos()[0].width - 2 ) );
+    auto nameCol = Column( info.name ).m_width( static_cast<std::size_t>( m_tablePrinter->columnInfos()[0].m_width - 2 ) );
 
     bool firstLine = true;
     for (auto line : nameCol) {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<app>
+    <logging pattern="%^[%H:%M:%S] %v%$" level="5"/>
+    <window width="1280" height="800" title="AZOR GAME" centerScreen="true"/>
+    <renderer viewport="0 0 1280 800"/>
+
+    <resources>
+        <images>
+            <img name="ohama" src="ohama.png" />
+            <img name="hawkeye" src="hawkeye.png" />
+        </images>
+        <shaderPrograms>
+            <program name="default">
+                <shader type="VERTEX" src="default.vert"/>
+                <shader type="FRAGMENT" src="default.frag"/>
+            </program>
+        </shaderPrograms>
+        <maps>
+            <map name="ohama" src="scene1.xml"/>
+        </maps>
+    </resources>
+
+    <physicsWorld gravity="100.0"/>
+
+    <scenes firstScene="ohama">
+        <scene name="ohama">
+            <map name="ohama"/>
+            <camera width="1280" height="800"/>
+            <shader name="default"/>
+            <objects>
+                <object name="hawkeye" />
+            </objects>
+        </scene>
+    </scenes>
+</app>

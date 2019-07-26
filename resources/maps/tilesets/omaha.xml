@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tileset version="1.2" tiledversion="1.2.4" name="ohama" tilewidth="32" tileheight="32" tilecount="1392" columns="48">
+ <image source="../../images/ohama.png" m_width="1536" height="958"/>
+</tileset>

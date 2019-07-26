@@ -792,7 +792,7 @@ namespace detail
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////
-// Use SIMD instruction sets
+// Use SIMD instruction m_tile_sets
 
 #if GLM_HAS_ALIGNOF && (GLM_LANG & GLM_LANG_CXXMS_FLAG) && (GLM_ARCH & GLM_ARCH_SIMD_BIT)
 #	define GLM_CONFIG_SIMD GLM_ENABLE
@@ -1060,7 +1060,7 @@ namespace detail
 
 	// Report whether only xyzw component are used
 #	if defined GLM_FORCE_XYZW_ONLY
-#		pragma message("GLM: GLM_FORCE_XYZW_ONLY is defined. Only x, y, z and w component are available in vector type. This define disables swizzle operators and SIMD instruction sets.")
+#		pragma message("GLM: GLM_FORCE_XYZW_ONLY is defined. Only x, y, z and w component are available in vector type. This define disables swizzle operators and SIMD instruction m_tile_sets.")
 #	endif
 
 	// Report swizzle operator support

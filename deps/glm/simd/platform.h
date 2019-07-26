@@ -231,7 +231,7 @@
 #endif//GLM_COMPILER
 
 ///////////////////////////////////////////////////////////////////////////////////
-// Instruction sets
+// Instruction m_tile_sets
 
 // User defines: GLM_FORCE_PURE GLM_FORCE_INTRINSICS GLM_FORCE_SSE2 GLM_FORCE_SSE3 GLM_FORCE_AVX GLM_FORCE_AVX2 GLM_FORCE_AVX2
 
