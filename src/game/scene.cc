@@ -126,8 +126,8 @@ void Scene::update()
         if (intersect(object->getBound(), bound)){
             object->setActive(true);
             object->update();
-        } else
-            object->setActive(false);
+        }
+        else object->setActive(false);
     }
 }
 void Scene::draw(SpriteBatch *batch)
@@ -153,4 +153,9 @@ Camera *Scene::getCamera()
 void Scene::addEntity(Entity *entity)
 {
     m_objects.push_back(entity);
+}
+
+Scene* scene::getCurrentScene()
+{
+    return current_scene;
 }

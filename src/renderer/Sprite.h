@@ -15,7 +15,8 @@ class Sprite
     Texture*    m_texture;
     glm::vec4   m_data[6]{};
     glm::vec2   m_position{};
-    AABB   m_rectangle;
+    AABB        m_rectangle;
+    int         m_direction;
 
     static glm::vec2 quad[6];
 
@@ -24,6 +25,7 @@ class Sprite
     explicit    Sprite(const char* texture_name);
     void        setPosition(const glm::vec2& v);
     void        setPosition(const float* v);
+    void        setDirection(int direction);
     void        setRectangle(const AABB& rectangle);
 
     Texture*    getTexture() const;

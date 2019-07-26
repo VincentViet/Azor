@@ -37,10 +37,7 @@ void renderer::startUp(tinyxml2::XMLElement* renderer)
         height = atoi(result.at(3).c_str());
 
         glViewport(x, y, width, height);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
         glEnable(GL_BLEND);
-
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         batch = new SpriteBatch;

@@ -28,11 +28,12 @@ class Scene
 };
 
 namespace scene{
-    void startUp(tinyxml2::XMLElement* scenes);
-    void update();
-    void draw(SpriteBatch* batch);
-    void changeScene(const char* name);
-    void shutdown();
+    void            startUp(tinyxml2::XMLElement* scenes);
+    void            update();
+    void            draw(SpriteBatch* batch);
+    Scene*          getCurrentScene();
+    void            changeScene(const char* name);
+    void            shutdown();
 }
 
 

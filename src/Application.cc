@@ -20,10 +20,11 @@ void Application::run()
     while (!window::isClosed())
     {
         scene::update();
-        physics::update();
         renderer::update();
         debug::update();
+        physics::update();
         scene::draw(renderer::getSpriteBatch());
+        physics::draw();
         debug::draw();
         window::update();
     }

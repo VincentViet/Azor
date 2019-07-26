@@ -13,6 +13,9 @@ namespace debug{
     void draw();
     void drawRect(const ImVec2& upper_left, const ImVec2& bottom_right, ImU32 color);
     void drawRectFiled(const ImVec2& upper_left, const ImVec2& bottom_right, ImU32 color);
+
+    void log(const char* fmt, ...);
+
     void shutdown();
 }
 

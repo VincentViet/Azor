@@ -50,10 +50,10 @@ std::vector<Entity*> &Layer<Entity*>::retrieve(const AABB &aabb)
     {
         if (intersect(data->getBound(), aabb))
         {
-            data->setActive(true);
+//            data->setActive(true);
             m_potential.emplace_back(data);
-        } else
-            data->setActive(false);
+        }
+//        else data->setActive(false);
     }
     return m_potential;
 }

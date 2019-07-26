@@ -18,6 +18,7 @@ class Entity
     Sprite*             m_sprite{};
     Scene*              m_scene;
     AABB                m_bound;
+    int                 m_direction;
  public:
     explicit            Entity(Scene* scene);
     virtual             ~Entity();
@@ -25,6 +26,7 @@ class Entity
     virtual void        update();
 
     void                setActive(bool active);
+    void                setDirection(int direction);
     bool                isActive() const;
     Body*               getBody();
     Sprite*             getSprite();

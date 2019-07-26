@@ -21,6 +21,7 @@ enum class BodyType{
 namespace physics{
     void startUp(tinyxml2::XMLElement* world);
     void update();
+    void draw();
     void shutdown();
     World* getWorld();
 }

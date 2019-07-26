@@ -7,8 +7,10 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include <window/window.h>
+#include "Console.h"
 
-static bool isDebug = false;
+static int debug_draw = 0;
+static Console* console = nullptr;
 
 void debug::startUp()
 {
@@ -20,10 +22,14 @@ void debug::startUp()
 
     ImGui_ImplGlfw_InitForOpenGL(window::getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
+
+    console = new Console;
 }
 
 void debug::update()
 {
+    static bool console_open = true;
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -64,8 +70,12 @@ void debug::update()
         ImGui::End();
         return;
     }
-    ImGui::Checkbox("Debug draw", &isDebug);
+
+    ImGui::RadioButton("Debug draw AABB", &debug_draw, 0);
+    ImGui::RadioButton("Debug draw shape", &debug_draw, 1);
     ImGui::End();
+
+    console->Draw("Console", &console_open);
 }
 
 void debug::draw()
@@ -77,19 +87,30 @@ void debug::draw()
 
 void debug::drawRect(const ImVec2& upper_left, const ImVec2& bottom_right, ImU32 color)
 {
-    if (isDebug)
+    if (debug_draw == 0)
         ImGui::GetBackgroundDrawList()->AddRect(upper_left, bottom_right, color);
 }
 
 void debug::drawRectFiled(const ImVec2 &upper_left, const ImVec2 &bottom_right, ImU32 color)
 {
-    if (isDebug)
+    if (debug_draw == 1)
         ImGui::GetBackgroundDrawList()->AddRectFilled(upper_left, bottom_right, color);
 }
 
 void debug::shutdown()
 {
+    delete console;
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void debug::log(const char *fmt, ...)
+{
+    char buf[1024];
+    va_list args;
+    va_start(args, fmt);
+    console->AddLog(fmt, args);
+    va_end(args);
 }

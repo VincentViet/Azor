@@ -11,14 +11,17 @@ Entity::~Entity()
 }
 void Entity::update()
 {
-//    if (m_body){
-//        b2Vec2 pos = m_body->GetPosition();
-//        glm::vec2 glm_pos(pos.x, pos.y);
-//        glm::vec2 camera_pos = m_scene->getCamera()->getBound().getPos();
-//        glm::vec2 result = glm_pos - camera_pos;
-//
-//        m_body->SetTransform(b2Vec2(result.x, result.y), 0);
-//    }
+    if (m_body){
+        b2Vec2 p = m_body->GetPosition();
+        glm::vec2 pos(p.x, p.y);
+        glm::vec2 result = pos - m_scene->getCamera()->getBound().min;
+
+        if (m_sprite)
+        {
+            m_sprite->setPosition(result);
+            m_sprite->setDirection(m_direction);
+        }
+    }
 }
 Body *Entity::getBody()
 {
@@ -31,6 +34,7 @@ Sprite *Entity::getSprite()
 Entity::Entity(Scene *scene)
 {
     m_scene = scene;
+    m_direction = 1;
 }
 void Entity::setActive(bool active)
 {
@@ -45,4 +49,8 @@ const AABB &Entity::getBound()
     auto pos = m_body->GetPosition();
     m_bound.setPos(glm::vec2(pos.x, pos.y));
     return m_bound;
+}
+void Entity::setDirection(int direction)
+{
+    m_direction = direction;
 }
