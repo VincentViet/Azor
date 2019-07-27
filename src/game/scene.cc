@@ -83,7 +83,10 @@ Scene::Scene(tinyxml2::XMLElement *scene)
 
     m_map = resources::getMap(name);
     m_map->setScene(this);
+    m_map->setFactor({4.0f, 4.0f});
     m_map->load();
+
+    m_camera->setClamp(m_map->getBound());
 
     shader->QueryStringAttribute(_AZOR_CONFIG_SCENES_NAME_ATTRIB_, &name);
     m_shader = resources::getShader(name);
@@ -94,21 +97,22 @@ Scene::~Scene()
 }
 void Scene::update()
 {
-    static glm::vec2 v(0);
-    static float speed = 100.0f;
-
-    // camera
-    float delta_time = window::getDeltaTime();
-    if (window::isKeyDown(window::Keys::UP))
-        v -= glm::vec2(0, speed * delta_time);
-    if (window::isKeyDown(window::Keys::DOWN))
-        v += glm::vec2(0, speed * delta_time);
-    if (window::isKeyDown(window::Keys::LEFT))
-        v -= glm::vec2(speed * delta_time, 0);
-    if (window::isKeyDown(window::Keys::RIGHT))
-        v += glm::vec2(speed * delta_time, 0);
+    static glm::vec2 v(0, 695 * 4.0f);
+//    static float speed = 1000.0f;
+//
+//    // camera
+//    float delta_time = (float)window::getDeltaTime();
+//    if (window::isKeyDown(window::Keys::UP))
+//        v -= glm::vec2(0, speed * delta_time);
+//    if (window::isKeyDown(window::Keys::DOWN))
+//        v += glm::vec2(0, speed * delta_time);
+//    if (window::isKeyDown(window::Keys::LEFT))
+//        v -= glm::vec2(speed * delta_time, 0);
+//    if (window::isKeyDown(window::Keys::RIGHT))
+//        v += glm::vec2(speed * delta_time, 0);
 
     m_camera->setPosition(v);
+//    m_camera->update();
     m_shader->use();
     m_shader->set_matrix("projection", glm::value_ptr(m_camera->getProjection()));
 

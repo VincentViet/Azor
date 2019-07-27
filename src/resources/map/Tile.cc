@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Tile::Tile(int id, Texture *texture, const AABB &bound, const AABB &rectangle)
-    : Sprite(texture), m_id(id), m_bound(bound)
+    : Sprite(texture), m_id(id), m_bound(bound), m_factor(1.0)
 {
     m_rectangle = rectangle;
     m_camera = nullptr;
@@ -32,7 +32,7 @@ glm::vec4* Tile::getData()
         model = glm::translate(model, glm::vec3(m_position, 0.0));
 
         auto size = m_rectangle.getSize();
-        model = glm::scale(model, glm::vec3(size.x, size.y, 0));
+        model = glm::scale(model, glm::vec3(size.x * m_factor.x, size.y * m_factor.y, 0));
 
         // 0
         x = m_rectangle.min.x / m_texture->width;
@@ -93,4 +93,8 @@ glm::vec4* Tile::getData()
 bool Tile::isValid() const
 {
     return m_id;
+}
+void Tile::setFactor(const glm::vec2 &factor)
+{
+    m_factor = factor;
 }

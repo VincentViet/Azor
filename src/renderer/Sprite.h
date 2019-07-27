@@ -15,6 +15,7 @@ class Sprite
     Texture*    m_texture;
     glm::vec4   m_data[6]{};
     glm::vec2   m_position{};
+    glm::vec2   m_factor;
     AABB        m_rectangle;
     int         m_direction;
 
@@ -25,6 +26,7 @@ class Sprite
     explicit    Sprite(const char* texture_name);
     void        setPosition(const glm::vec2& v);
     void        setPosition(const float* v);
+    void        setFactor(const glm::vec2& factor);
     void        setDirection(int direction);
     void        setRectangle(const AABB& rectangle);
 

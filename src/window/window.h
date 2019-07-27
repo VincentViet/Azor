@@ -16,6 +16,7 @@ namespace window{
         LEFT = 263,
         DOWN = 264,
         UP = 265,
+        X = 88
     };
 
     void    startUp(tinyxml2::XMLElement* window_node);

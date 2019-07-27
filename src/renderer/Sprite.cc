@@ -20,11 +20,13 @@ glm::vec2 Sprite::quad[6]{
 //}
 
 Sprite::Sprite(Texture* texture)
+    : m_factor(1.0)
 {
     m_texture = texture;
     m_direction = 1;
 }
 Sprite::Sprite(const char *texture_name)
+    : m_factor(1.0)
 {
     m_texture = resources::getTexture(texture_name);
     m_direction = 1;
@@ -51,7 +53,7 @@ glm::vec4* Sprite::getData()
     model = glm::translate(model, glm::vec3(m_position, 0.0));
 
     auto size = m_rectangle.getSize();
-    model = glm::scale(model, glm::vec3((float)m_direction * size.x, size.y, 0));
+    model = glm::scale(model, glm::vec3((float)m_direction * size.x * m_factor.x, size.y * m_factor.y, 0));
 
     // 0
     x = m_rectangle.min.x / (float)m_texture->width;
@@ -106,4 +108,8 @@ Texture *Sprite::getTexture() const
 void Sprite::setDirection(int direction)
 {
     m_direction = direction;
+}
+void Sprite::setFactor(const glm::vec2 &factor)
+{
+    m_factor = factor;
 }

@@ -44,6 +44,11 @@ void Map::load()
     tmx.RootElement()->QueryIntAttribute(TMX_TILE_WIDTH_ATTRIB, &m_tile_width);
     tmx.RootElement()->QueryIntAttribute(TMX_TILE_HEIGHT_ATTRIB, &m_tile_height);
 
+    m_tile_width *= m_factor.x;
+    m_tile_height *= m_factor.y;
+
+    m_bound = AABB(0, 0, (float)m_width * (float)m_tile_width, (float)m_height * (float)m_tile_height);
+
     loadTileSets(tmx);
     loadLayers(tmx);
 }
@@ -52,6 +57,7 @@ static std::vector<int> getLayerData(const std::string& data){
     const auto& raw_data = string::split(data, ",");
     std::vector<int> result;
 
+    result.reserve(raw_data.size());
     for (const auto& item: raw_data)
     {
         result.push_back(atoi(item.c_str()));
@@ -99,6 +105,7 @@ void Map::loadLayers(const XMLDocument& tmx)
                     }
                 }
                 Tile tile(id, texture, lr, tr);
+                tile.setFactor(m_factor);
                 tile.setCamera(m_scene->getCamera());
                 l->insert(tile);
             }
@@ -119,7 +126,7 @@ void Map::loadLayers(const XMLDocument& tmx)
             object->QueryFloatAttribute(TMX_WIDTH_ATTRIB, &width);
             object->QueryFloatAttribute(TMX_HEIGHT_ATTRIB, &height);
 
-            ground = new Ground(x, y, width, height, m_scene);
+            ground = new Ground(x, y, width, height, m_scene, m_factor);
             Entity* entity = ground;
             l->insert(entity);
 
@@ -173,9 +180,17 @@ void Map::setScene(Scene *scene)
     m_scene = scene;
 }
 Map::Map(const char *path)
-    : m_scene(nullptr), m_path(path)
+    : m_scene(nullptr), m_path(path), m_factor(1.0)
 {}
 Layer<Entity *> *Map::getObjectLayer(int id)
 {
     return m_object_layers.at(id);
+}
+void Map::setFactor(const glm::vec2 &factor)
+{
+    m_factor = factor;
+}
+AABB &Map::getBound()
+{
+    return m_bound;
 }

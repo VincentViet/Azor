@@ -12,15 +12,7 @@
 static void idle(Entity* entity);
 static void moveLeft(Entity* entity);
 static void moveRight(Entity* entity);
-
-//static AABB animation[6]{
-//    {57.875, 10.75, 22.25, 45.375},
-//    {88, 11.75, 23, 44.25},
-//    {120.875, 11, 18.25, 45},
-//    {151.75, 11.5, 22.625, 44.625},
-//    {185.25, 11.125, 17.625, 44.625},
-//    {15.5, 131, 24.5, 40}
-//};
+static void jump(Entity* entity);
 
 static AABB animation[6]{
     {57.875, 311.875, 22.25, 45.375},
@@ -30,19 +22,20 @@ static AABB animation[6]{
     {185.25, 312.25, 17.625, 44.625},
     {15.5, 197, 24.5, 40}
 };
-static float speed = 100.0f;
+static float speed = 1000.0f;
+static bool    m_is_grounded;
 
 Hawkeye::Hawkeye(Scene *scene)
-    : Entity(scene)
+    : Entity(scene, {4.0f, 4.0f})
 {
     b2BodyDef body_def;
-    body_def.position = b2Vec2(640, 400);
+    body_def.position = b2Vec2(47 * m_factor.x, 840 * m_factor.y);
     body_def.type = (b2BodyType)BodyType::DYNAMIC;
     body_def.fixedRotation = true;
     body_def.userData = this;
 
     b2PolygonShape box;
-    box.SetAsBox(12.5, 23);
+    box.SetAsBox(12.5 * m_factor.x, 23 * m_factor.y);
 
     b2FixtureDef fixture_def;
     fixture_def.userData = this;
@@ -55,8 +48,12 @@ Hawkeye::Hawkeye(Scene *scene)
     m_body->CreateFixture(&fixture_def);
 
     m_sprite = new Sprite("hawkeye");
+    m_sprite->setFactor(m_factor);
 
     m_brand.pushState(idle);
+    m_direction = -1;
+    m_tag = CHARACTER;
+    m_is_grounded = false;
 }
 void Hawkeye::update()
 {
@@ -69,6 +66,10 @@ void Hawkeye::update()
 FSM &Hawkeye::getFSM()
 {
     return m_brand;
+}
+void Hawkeye::onCollisionEnter(Entity *entity)
+{
+    m_is_grounded = entity->getTag() == GROUND;
 }
 
 void animateWalk(Entity* entity){
@@ -98,7 +99,10 @@ void moveLeft(Entity* entity)
     {
         fsm.popState();
         fsm.pushState(moveRight);
-    } else{
+    } else if (window::isKeyDown(window::Keys::X) && m_is_grounded){
+        fsm.popState();
+        fsm.pushState(jump);
+    }else{
         fsm.popState();
     }
 }
@@ -117,7 +121,11 @@ void moveRight(Entity* entity)
     {
         fsm.popState();
         fsm.pushState(moveLeft);
-    } else{
+    } else if (window::isKeyDown(window::Keys::X) && m_is_grounded){
+        fsm.popState();
+        fsm.pushState(jump);
+    }
+    else{
         fsm.popState();
     }
 }
@@ -127,7 +135,7 @@ void idle(Entity* entity)
     entity->getBody()->SetLinearVelocity(b2Vec2(0, v.y));
 
     entity->getSprite()->setRectangle(animation[0]);
-    entity->setDirection(-1);
+    entity->setDirection(entity->getDirection());
 
     FSM& fsm = ((Hawkeye*)entity)->getFSM();
 
@@ -135,4 +143,17 @@ void idle(Entity* entity)
         fsm.pushState(moveLeft);
     else if (window::isKeyDown(window::Keys::RIGHT))
         fsm.pushState(moveRight);
+    else if (window::isKeyDown(window::Keys::X) && m_is_grounded){
+        fsm.pushState(jump);
+    }
+}
+void jump(Entity* entity){
+    auto direction = entity->getDirection();
+    entity->getBody()->ApplyForceToCenter(b2Vec2(100 * -direction, -1000), true);
+    entity->getSprite()->setRectangle(animation[5]);
+
+    FSM& fsm = ((Hawkeye*)entity)->getFSM();
+    if (m_is_grounded){
+        fsm.popState();
+    }
 }

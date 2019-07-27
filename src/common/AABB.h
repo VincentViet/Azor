@@ -60,4 +60,9 @@ inline bool intersect(const AABB& a, const AABB& b){
 
 }
 
+inline bool clamp(const AABB& a, const AABB& b){
+    return (a.min.x >= b.min.x && a.max.x <= b.max.x)
+        && (a.min.y >= b.min.y && a.max.y <= b.max.y);
+}
+
 #endif //AZOR_SRC_COMMON_REC_H_

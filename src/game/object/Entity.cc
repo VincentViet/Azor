@@ -32,6 +32,7 @@ Sprite *Entity::getSprite()
     return m_sprite;
 }
 Entity::Entity(Scene *scene)
+    : m_factor(1), m_tag(UNKNOWN)
 {
     m_scene = scene;
     m_direction = 1;
@@ -53,4 +54,22 @@ const AABB &Entity::getBound()
 void Entity::setDirection(int direction)
 {
     m_direction = direction;
+}
+Entity::Entity(Scene *scene, const glm::vec2& factor)
+{
+    m_scene = scene;
+    m_direction = 1;
+    m_factor  = factor;
+}
+int Entity::getDirection() const
+{
+    return m_direction;
+}
+void Entity::onCollisionEnter(Entity *entity)
+{}
+void Entity::onCollisionExit(Entity *entity)
+{}
+Entity::Tag Entity::getTag()
+{
+    return m_tag;
 }

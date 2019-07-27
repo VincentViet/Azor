@@ -16,28 +16,35 @@ class Scene;
 
 class Map
 {
-    int m_width{};
-    int m_height{};
-    int m_tile_width{};
-    int m_tile_height{};
-    Scene* m_scene;
-    std::string m_path{};
+    int                                 m_width{};
+    int                                 m_height{};
+    int                                 m_tile_width{};
+    int                                 m_tile_height{};
+    Scene*                              m_scene;
+    std::string                         m_path{};
 
-    std::vector<TileSet> m_tile_sets;
-    std::vector<Layer<Tile>*> m_tile_layers;
-    std::vector<Layer<Entity*>*> m_object_layers{};
+    glm::vec2                           m_factor;
+    AABB                                m_bound;
+
+    std::vector<TileSet>                m_tile_sets;
+    std::vector<Layer<Tile>*>           m_tile_layers;
+    std::vector<Layer<Entity*>*>        m_object_layers{};
 
     friend class Scene;
  private:
-    void loadLayers(const tinyxml2::XMLDocument& tmx);
-    void loadTileSets(const tinyxml2::XMLDocument& tmx);
+    void                                loadLayers(const tinyxml2::XMLDocument& tmx);
+    void                                loadTileSets(const tinyxml2::XMLDocument& tmx);
  public:
-    explicit Map(const char* path);
-    ~Map();
-    void load();
-    void setScene(Scene* scene);
-    Layer<Tile>* getTileLayer(int id);
-    Layer<Entity*>* getObjectLayer(int id);
+    explicit                             Map(const char* path);
+                                        ~Map();
+    void                                load();
+    void                                setFactor(const glm::vec2& factor);
+    void                                setScene(Scene* scene);
+
+    AABB&                               getBound();
+
+    Layer<Tile>*                        getTileLayer(int id);
+    Layer<Entity*>*                     getObjectLayer(int id);
 };
 
 #endif //AZOR_TMXPARSER_MAP_H_
